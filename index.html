@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saharsh Sharma - Video Editor Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        :root {
+            --accent-color: #4f46e5;
+            --accent-gradient-start: #4f46e5;
+            --accent-gradient-end: #c026d3;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+        }
+        .header-gradient {
+            background-image: linear-gradient(to right, var(--accent-gradient-start), var(--accent-gradient-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        /* Slideshow Styles */
+        #banner-slideshow-container .slide {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transform: scale(1.1); /* Start slightly zoomed in */
+            transition: opacity 1.5s ease-in-out, transform 8s ease-in-out;
+        }
+        #banner-slideshow-container .slide.active {
+            opacity: 1;
+            transform: scale(1); /* Zoom out to normal */
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #30363d;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 0 25px rgba(79, 70, 229, 0.3);
+            border-color: var(--accent-color);
+        }
+        .card-thumbnail { position: relative; overflow: hidden; }
+        .play-icon {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 64px; height: 64px;
+            background-color: rgba(0,0,0, 0.7);
+            border: 2px solid var(--accent-color);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: all 0.3s ease;
+        }
+        .card:hover .play-icon { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .play-icon svg { color: white; width: 32px; height: 32px; }
+        .filter-btn { background-color: #21262d; border: 1px solid #30363d; transition: all 0.2s ease-in-out; }
+        .filter-btn:hover { background-color: #30363d; color: #58a6ff; }
+        .filter-btn.active { background-color: var(--accent-color); color: white; border-color: var(--accent-color); }
+        .animated-section { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .social-icon:hover { color: var(--accent-color); transform: scale(1.1); transition: all 0.2s ease; }
+        .skill-badge { background-color: #21262d; border: 1px solid #30363d; }
+        .settings-panel {
+            position: fixed; top: 0; right: -450px; width: 420px; height: 100%;
+            background-color: #161b22; border-left: 1px solid #30363d;
+            transition: right 0.4s ease-in-out; z-index: 100;
+            overflow-y: auto;
+        }
+        .settings-panel.open { right: 0; }
+        .settings-panel input, .settings-panel textarea, .settings-panel select {
+            background-color: #0d1117; border: 1px solid #30363d;
+            color: #c9d1d9; border-radius: 6px; padding: 8px 12px;
+            width: 100%;
+        }
+        .settings-panel input[type="file"] {
+            padding: 0;
+            background-color: #21262d;
+        }
+        .settings-panel input[type="file"]::file-selector-button {
+            background-color: #30363d; border: none; padding: 8px 12px;
+            margin-right: 12px; color: #c9d1d9; cursor: pointer;
+            transition: background-color 0.2s;
+        }
+         .settings-panel input[type="file"]::file-selector-button:hover { background-color: #484f58; }
+        .settings-panel label { display: block; margin-bottom: 4px; font-size: 0.9rem; color: #8b949e;}
+        .btn-accent { background-color: var(--accent-color); }
+        #footer-copyright { cursor: default; }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Password Modal -->
+    <div id="password-modal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden items-center justify-center p-4">
+        <div class="bg-[#161b22] p-8 rounded-lg shadow-xl w-full max-w-sm border border-gray-700 relative">
+            <button id="password-close-btn" class="absolute top-3 right-4 text-gray-400 hover:text-white text-3xl font-light">&times;</button>
+            <h3 class="text-xl font-bold mb-2 text-white">Admin Access</h3>
+            <p class="text-gray-400 mb-4">Please enter the password to edit the portfolio.</p>
+            <div id="password-error" class="text-red-400 text-sm mb-4 hidden">Incorrect password. Please try again.</div>
+            <input type="password" id="password-input" class="w-full bg-[#0d1117] border border-[#30363d] rounded-md p-2 text-white" placeholder="Password..." autofocus>
+            <button id="password-submit-btn" class="w-full mt-4 py-2 px-4 rounded-md btn-accent hover:opacity-90 transition-colors font-semibold">Unlock</button>
+        </div>
+    </div>
+    
+    <!-- Settings Panel -->
+    <div id="settings-panel" class="settings-panel p-6">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">Customize Portfolio</h2>
+            <button id="settings-close-btn" class="text-2xl">&times;</button>
+        </div>
+        
+        <div class="space-y-4 mb-6">
+            <h3 class="text-lg font-semibold border-b border-gray-700 pb-2">General Info</h3>
+            <div><label for="edit-profile-pic">Profile Picture</label><input type="file" id="edit-profile-pic" accept="image/*"></div>
+            <div><label for="edit-name">Name</label><input type="text" id="edit-name"></div>
+            <div><label for="edit-tagline">Tagline</label><input type="text" id="edit-tagline"></div>
+            <div><label for="edit-about">About Me</label><textarea id="edit-about" rows="4"></textarea></div>
+            <div><label for="edit-email">Email</label><input type="email" id="edit-email"></div>
+            <div><label for="edit-linkedin">LinkedIn URL</label><input type="url" id="edit-linkedin"></div>
+            <div><label for="edit-instagram">Instagram URL</label><input type="url" id="edit-instagram"></div>
+            <div><label for="edit-youtube">YouTube URL</label><input type="url" id="edit-youtube"></div>
+            <div><label for="edit-accent-color">Accent Color</label><input type="color" id="edit-accent-color" class="p-1 h-10 w-full"></div>
+        </div>
+
+        <div class="space-y-4 mb-6">
+            <h3 class="text-lg font-semibold border-b border-gray-700 pb-2">Banner Slideshow Images</h3>
+            <div id="banner-images-editor" class="space-y-3"></div>
+            <label for="add-banner-img-input" id="add-banner-img-btn" class="w-full block text-center py-2 px-4 rounded-md bg-blue-600 hover:bg-blue-700 transition-colors font-semibold cursor-pointer">Add Banner Image</label>
+            <input type="file" id="add-banner-img-input" class="hidden" accept="image/*">
+        </div>
+
+        <div class="space-y-4">
+            <h3 class="text-lg font-semibold border-b border-gray-700 pb-2">Portfolio Items</h3>
+            <div id="portfolio-items-editor" class="space-y-3"></div>
+            <button id="add-item-btn" class="w-full py-2 px-4 rounded-md bg-green-600 hover:bg-green-700 transition-colors font-semibold">Add New Item</button>
+        </div>
+    </div>
+    
+    <!-- Header Section -->
+    <header id="header-section" class="relative text-center animated-section h-80 md:h-96">
+        <div id="banner-slideshow-container" class="absolute inset-0 overflow-hidden"></div>
+        <div class="absolute inset-0 bg-black/60"></div>
+        <div class="relative px-6 h-full flex flex-col items-center justify-center">
+            <img id="display-profile-pic" class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-gray-800 shadow-lg object-cover" src="" alt="Profile Picture">
+            <h1 id="display-name" class="text-4xl md:text-6xl font-extrabold tracking-tight header-gradient mt-4"></h1>
+            <p id="display-tagline" class="mt-2 text-lg md:text-xl text-gray-300 max-w-3xl mx-auto"></p>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-6 md:px-12">
+        <section id="about" class="py-16 animated-section">
+             <div class="bg-[#161b22] border border-[#30363d] rounded-lg p-8 md:p-12 text-center max-w-5xl mx-auto shadow-2xl">
+                <h2 class="text-3xl font-bold mb-6">About Me</h2>
+                <p id="display-about" class="text-gray-400 leading-relaxed max-w-3xl mx-auto"></p>
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold text-gray-200 mb-4">My Skills</h3>
+                    <div class="flex flex-wrap justify-center items-center gap-4">
+                        <div class="skill-badge flex items-center gap-2 py-2 px-4 rounded-lg"><i class="fa-solid fa-film text-indigo-400"></i><span>Adobe Premiere Pro</span></div>
+                        <div class="skill-badge flex items-center gap-2 py-2 px-4 rounded-lg"><i class="fa-solid fa-sliders text-purple-400"></i><span>DaVinci Resolve</span></div>
+                         <div class="skill-badge flex items-center gap-2 py-2 px-4 rounded-lg"><i class="fa-solid fa-mobile-screen-button text-pink-400"></i><span>CapCut Pro</span></div>
+                        <div class="skill-badge flex items-center gap-2 py-2 px-4 rounded-lg"><i class="fa-solid fa-image text-blue-400"></i><span>Photoshop</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <main id="portfolio" class="pb-16 animated-section">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">My Work</h2>
+            <div id="filter-buttons" class="flex flex-wrap justify-center gap-3 mb-12">
+                <button class="filter-btn active py-2 px-5 rounded-full text-sm font-semibold" data-filter="all">All</button>
+                <button class="filter-btn py-2 px-5 rounded-full text-sm font-semibold" data-filter="promo">Promotional</button>
+                <button class="filter-btn py-2 px-5 rounded-full text-sm font-semibold" data-filter="shorts">Shorts</button>
+                <button class="filter-btn py-2 px-5 rounded-full text-sm font-semibold" data-filter="reels">Reels</button>
+            </div>
+            <div id="portfolio-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </main>
+    </div>
+
+    <section id="contact" class="py-16 bg-[#161b22] border-t border-[#30363d] animated-section">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-4">Get In Touch</h2>
+            <p class="text-gray-400 mb-8 max-w-lg mx-auto">I'm currently available for freelance projects. Feel free to reach out!</p>
+            <a id="display-email-btn" href="#" class="btn-accent hover:opacity-90 text-white font-bold py-3 px-8 rounded-full transition duration-300">Email Me</a>
+            <div class="flex justify-center gap-6 mt-8">
+                <a id="display-linkedin" href="#" target="_blank" rel="noopener noreferrer" class="text-gray-400 social-icon text-2xl"><i class="fab fa-linkedin"></i></a>
+                <a id="display-instagram" href="#" target="_blank" rel="noopener noreferrer" class="text-gray-400 social-icon text-2xl"><i class="fab fa-instagram"></i></a>
+                <a id="display-youtube" href="#" target="_blank" rel="noopener noreferrer" class="text-gray-400 social-icon text-2xl"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center py-6 bg-[#0d1117]">
+        <p id="footer-copyright" class="text-gray-500">&copy; 2024 <span id="display-name-footer"></span>. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const ADMIN_PASSWORD = 'password123';
+        const initialData = {
+            profilePic: "https://placehold.co/200x200/161b22/c9d1d9?text=S",
+            bannerImages: ["https://placehold.co/1600x900/161b22/30363d?text=Banner+1"],
+            name: "Saharsh Sharma",
+            tagline: "Video Editor & Creative Storyteller crafting compelling visual narratives.",
+            about: "Creative and detail-oriented Video Editor with 4 years of experience transforming raw footage into compelling stories. Known for delivering emotionally engaging, visually captivating videos that resonate with audiences. Passionate about storytelling and client satisfaction.",
+            email: "mithuhno3@gmail.com",
+            linkedin: "https://linkedin.com/in/saharsh-sharma-83839b315",
+            instagram: "https://www.instagram.com/",
+            youtube: "https://www.youtube.com/",
+            accentColor: "#4f46e5",
+            portfolioItems: [
+                { id: 1, title: "Technothon Trailer", category: "promo", link: "https://drive.google.com/file/d/1sKUqmUAsoKNBfUO8GR1tPSGBLxbENBEQ/view?usp=sharing", thumbnail: "https://placehold.co/600x400/1f2937/ffffff?text=Technothon+Trailer" },
+                { id: 2, title: "Sponsor Promotion Video", category: "promo", link: "https://drive.google.com/file/d/1gFqrVwcjGzPj0oKifHYmO8hxcRTuGnzl/view?usp=sharing", thumbnail: "https://placehold.co/600x400/1f2937/ffffff?text=Sponsor+Promo+1" },
+                { id: 3, title: "Sponsor Promotion Video 2", category: "promo", link: "https://drive.google.com/file/d/1k6z1PHaKGGOPo28Rt7hyzS4rcL6xhdEF/view?usp=sharing", thumbnail: "https://placehold.co/600x400/1f2937/ffffff?text=Sponsor+Promo+2" },
+                { id: 4, title: "Mythology Short 1", category: "shorts", link: "https://youtube.com/shorts/9j_iEiyMXEw", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Mythology+Short+1" },
+                { id: 5, title: "Mythology Short 2", category: "shorts", link: "https://youtube.com/shorts/83CYOuvf57g", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Mythology+Short+2" },
+                { id: 6, title: "Mythology Short 3", category: "shorts", link: "https://youtube.com/shorts/96dZreW1LIw", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Mythology+Short+3" },
+                { id: 7, title: "Cinematic Reel 1", category: "reels", link: "https://www.instagram.com/reel/DGIkaECSTiO/", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Cinematic+Reel+1" },
+                { id: 8, title: "Cinematic Reel 2", category: "reels", link: "https://www.instagram.com/reel/C6Vb48qSAt2/", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Cinematic+Reel+2" },
+                { id: 9, title: "Cinematic Reel 3", category: "reels", link: "https://www.instagram.com/reel/DGF_nvIy9V7/", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Cinematic+Reel+3" },
+            ]
+        };
+        let appData = {};
+        let slideshowInterval = null;
+
+        const elements = {
+            passwordModal: document.getElementById('password-modal'), passwordInput: document.getElementById('password-input'), passwordSubmitBtn: document.getElementById('password-submit-btn'), passwordCloseBtn: document.getElementById('password-close-btn'), passwordError: document.getElementById('password-error'),
+            settingsPanel: document.getElementById('settings-panel'), settingsCloseBtn: document.getElementById('settings-close-btn'), footerCopyright: document.getElementById('footer-copyright'),
+            edit: { 
+                profilePic: document.getElementById('edit-profile-pic'), name: document.getElementById('edit-name'), tagline: document.getElementById('edit-tagline'), about: document.getElementById('edit-about'), email: document.getElementById('edit-email'), linkedin: document.getElementById('edit-linkedin'), instagram: document.getElementById('edit-instagram'), youtube: document.getElementById('edit-youtube'), accentColor: document.getElementById('edit-accent-color') 
+            },
+            display: { 
+                profilePic: document.getElementById('display-profile-pic'), bannerContainer: document.getElementById('banner-slideshow-container'), name: document.getElementById('display-name'), nameFooter: document.getElementById('display-name-footer'), tagline: document.getElementById('display-tagline'), about: document.getElementById('display-about'), emailBtn: document.getElementById('display-email-btn'), linkedin: document.getElementById('display-linkedin'), instagram: document.getElementById('display-instagram'), youtube: document.getElementById('display-youtube') 
+            },
+            bannerImagesEditor: document.getElementById('banner-images-editor'), addBannerImgBtn: document.getElementById('add-banner-img-btn'), addBannerImgInput: document.getElementById('add-banner-img-input'),
+            portfolioGrid: document.getElementById('portfolio-grid'), portfolioItemsEditor: document.getElementById('portfolio-items-editor'), addItemBtn: document.getElementById('add-item-btn'), filterButtons: document.getElementById('filter-buttons'),
+        };
+
+        function saveData() { localStorage.setItem('portfolioData', JSON.stringify(appData)); }
+        function loadData() { const savedData = localStorage.getItem('portfolioData'); appData = savedData ? JSON.parse(savedData) : JSON.parse(JSON.stringify(initialData)); }
+
+        function renderPage() {
+            elements.display.profilePic.src = appData.profilePic;
+            elements.display.name.textContent = appData.name;
+            elements.display.nameFooter.textContent = appData.name;
+            elements.display.tagline.textContent = appData.tagline;
+            elements.display.about.textContent = appData.about;
+            elements.display.emailBtn.href = `mailto:${appData.email}`;
+            elements.display.linkedin.href = appData.linkedin;
+            elements.display.instagram.href = appData.instagram;
+            elements.display.youtube.href = appData.youtube;
+            document.documentElement.style.setProperty('--accent-color', appData.accentColor);
+            document.documentElement.style.setProperty('--accent-gradient-start', appData.accentColor);
+            renderBannerSlideshow();
+            renderPortfolioGrid();
+        }
+        
+        function startSlideshow() {
+            if (slideshowInterval) clearInterval(slideshowInterval);
+            const slides = elements.display.bannerContainer.children;
+            if (slides.length <= 1) return;
+
+            let currentSlideIndex = 0;
+            slides[currentSlideIndex].classList.add('active');
+
+            slideshowInterval = setInterval(() => {
+                slides[currentSlideIndex].classList.remove('active');
+                currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+                slides[currentSlideIndex].classList.add('active');
+            }, 5000); // Change slide every 5 seconds
+        }
+
+        function renderBannerSlideshow() {
+            elements.display.bannerContainer.innerHTML = '';
+            appData.bannerImages.forEach(imgSrc => {
+                const slide = document.createElement('div');
+                slide.className = 'slide';
+                slide.style.backgroundImage = `url(${imgSrc})`;
+                elements.display.bannerContainer.appendChild(slide);
+            });
+            startSlideshow();
+        }
+
+        function renderPortfolioGrid(filter = 'all') {
+            elements.portfolioGrid.innerHTML = '';
+            appData.portfolioItems.filter(item => filter === 'all' || item.category === filter).forEach(item => {
+                const aspect = item.category === 'promo' ? 'aspect-video' : 'aspect-[9/16]';
+                const card = `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="portfolio-item card block bg-[#161b22] rounded-lg overflow-hidden" data-category="${item.category}"><div class="card-thumbnail ${aspect} bg-gray-700"><img src="${item.thumbnail}" alt="${item.title}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/1f2937/ffffff?text=Image';"><div class="play-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></div></div><div class="p-5"><h3 class="font-semibold text-lg text-gray-200">${item.title}</h3><p class="text-sm text-gray-400 mt-1">Category: ${item.category}</p></div></a>`;
+                elements.portfolioGrid.innerHTML += card;
+            });
+        }
+        
+        function populateSettings() {
+            for (const key in elements.edit) {
+                if (elements.edit[key].type !== 'file') {
+                    elements.edit[key].value = appData[key];
+                }
+            }
+            renderBannerEditor();
+            renderPortfolioEditor();
+        }
+
+        function renderBannerEditor() {
+            elements.bannerImagesEditor.innerHTML = '';
+            appData.bannerImages.forEach((imgSrc, index) => {
+                const editor = document.createElement('div');
+                editor.className = 'flex items-center gap-2';
+                editor.innerHTML = `
+                    <img src="${imgSrc}" class="w-10 h-10 object-cover rounded">
+                    <span class="flex-1 text-xs truncate">Banner ${index + 1}</span>
+                    <button data-index="${index}" class="delete-banner-btn text-red-500 hover:text-red-400">&times;</button>
+                `;
+                elements.bannerImagesEditor.appendChild(editor);
+            });
+            elements.addBannerImgBtn.style.display = appData.bannerImages.length < 10 ? 'block' : 'none';
+        }
+
+        function renderPortfolioEditor() {
+            elements.portfolioItemsEditor.innerHTML = '';
+            appData.portfolioItems.forEach(item => {
+                const editor = document.createElement('div');
+                editor.className = 'p-4 border border-gray-700 rounded-lg space-y-3';
+                editor.innerHTML = `<input type="text" value="${item.title}" data-id="${item.id}" data-field="title" placeholder="Title"><input type="text" value="${item.link}" data-id="${item.id}" data-field="link" placeholder="Video URL"><input type="text" value="${item.thumbnail}" data-id="${item.id}" data-field="thumbnail" placeholder="Thumbnail URL"><select data-id="${item.id}" data-field="category"><option value="promo" ${item.category === 'promo' ? 'selected' : ''}>Promotional</option><option value="shorts" ${item.category === 'shorts' ? 'selected' : ''}>Shorts</option><option value="reels" ${item.category === 'reels' ? 'selected' : ''}>Reels</option></select><button data-id="${item.id}" class="delete-item-btn w-full py-1 text-sm bg-red-600 hover:bg-red-700 rounded">Delete</button>`;
+                elements.portfolioItemsEditor.appendChild(editor);
+            });
+        }
+        
+        let clickCount = 0;
+        let clickTimer = null;
+        elements.footerCopyright.addEventListener('click', () => {
+            clickCount++;
+            if (clickTimer) clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => { clickCount = 0; }, 1500);
+            if (clickCount === 5) {
+                elements.passwordModal.classList.remove('hidden');
+                elements.passwordModal.classList.add('flex');
+                elements.passwordInput.focus();
+                clickCount = 0; clearTimeout(clickTimer);
+            }
+        });
+
+        function closePasswordModal() {
+            elements.passwordModal.classList.add('hidden');
+            elements.passwordModal.classList.remove('flex');
+            elements.passwordInput.value = '';
+            elements.passwordError.classList.add('hidden');
+        }
+        
+        function checkPassword() {
+            if (elements.passwordInput.value === ADMIN_PASSWORD) {
+                closePasswordModal();
+                elements.settingsPanel.classList.add('open');
+            } else {
+                elements.passwordError.classList.remove('hidden');
+                elements.passwordInput.value = '';
+            }
+        }
+
+        elements.passwordSubmitBtn.addEventListener('click', checkPassword);
+        elements.passwordCloseBtn.addEventListener('click', closePasswordModal);
+        elements.passwordModal.addEventListener('click', (e) => { if (e.target === elements.passwordModal) { closePasswordModal(); }});
+        elements.passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkPassword(); });
+        elements.settingsCloseBtn.addEventListener('click', () => elements.settingsPanel.classList.remove('open'));
+        
+        function handleFileUpload(file, targetDataKey, isMultiple = false) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if (isMultiple) {
+                    if (appData[targetDataKey].length < 10) {
+                        appData[targetDataKey].push(e.target.result);
+                    }
+                } else {
+                    appData[targetDataKey] = e.target.result;
+                }
+                renderPage();
+                populateSettings();
+                saveData();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        elements.edit.profilePic.addEventListener('change', (e) => { if (e.target.files[0]) handleFileUpload(e.target.files[0], 'profilePic'); });
+        elements.addBannerImgInput.addEventListener('change', (e) => { if (e.target.files[0]) handleFileUpload(e.target.files[0], 'bannerImages', true); });
+        
+        for (const key in elements.edit) {
+            if(elements.edit[key].type !== 'file') {
+                elements.edit[key].addEventListener('input', (e) => {
+                    appData[key] = e.target.value;
+                    renderPage();
+                    saveData();
+                });
+            }
+        }
+
+        elements.bannerImagesEditor.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-banner-btn')) {
+                const index = parseInt(e.target.dataset.index);
+                appData.bannerImages.splice(index, 1);
+                renderPage();
+                populateSettings();
+                saveData();
+            }
+        });
+        
+        elements.portfolioItemsEditor.addEventListener('input', (e) => {
+             if(e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
+                const id = parseInt(e.target.dataset.id);
+                const field = e.target.dataset.field;
+                const item = appData.portfolioItems.find(i => i.id === id);
+                if(item) { item[field] = e.target.value; renderPage(); saveData(); }
+            }
+        });
+
+        elements.portfolioItemsEditor.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-item-btn')) {
+                const id = parseInt(e.target.dataset.id);
+                appData.portfolioItems = appData.portfolioItems.filter(i => i.id !== id);
+                renderPage();
+                renderPortfolioEditor();
+                saveData();
+            }
+        });
+
+        elements.addItemBtn.addEventListener('click', () => {
+            const newItem = { id: Date.now(), title: "New Video", category: "promo", link: "#", thumbnail: "https://placehold.co/600x400/1f2937/ffffff?text=New+Video" };
+            appData.portfolioItems.push(newItem);
+            renderPage();
+            renderPortfolioEditor();
+            saveData();
+        });
+
+        elements.filterButtons.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                elements.filterButtons.querySelector('.active').classList.remove('active');
+                e.target.classList.add('active');
+                renderPortfolioGrid(e.target.dataset.filter);
+            }
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.animated-section').forEach(section => observer.observe(section));
+
+        loadData();
+        renderPage();
+        populateSettings();
+    });
+    </script>
+</body>
+</html>
