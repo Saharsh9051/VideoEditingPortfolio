@@ -162,10 +162,15 @@
                 <div class="mt-8">
                     <h3 class="text-xl font-semibold text-gray-200 mb-4">My Skills</h3>
                     <div class="flex flex-wrap justify-center items-center gap-4">
+                         <div class="skill-badge flex items-center gap-2 py-2 px-4 rounded-lg"><i class="fa-solid fa-sliders text-purple-400"></i><span>DaVinci Resolve</span></div>
                         <div class="skill-badge flex items-center gap-2 py-2 px-4 rounded-lg"><i class="fa-solid fa-film text-indigo-400"></i><span>Adobe Premiere Pro</span></div>
-                        <div class="skill-badge flex items-center gap-2 py-2 px-4 rounded-lg"><i class="fa-solid fa-sliders text-purple-400"></i><span>DaVinci Resolve</span></div>
+                       
                          <div class="skill-badge flex items-center gap-2 py-2 px-4 rounded-lg"><i class="fa-solid fa-mobile-screen-button text-pink-400"></i><span>CapCut Pro</span></div>
                         <div class="skill-badge flex items-center gap-2 py-2 px-4 rounded-lg"><i class="fa-solid fa-image text-blue-400"></i><span>Photoshop</span></div>
+                        <div class="skill-badge flex items-center gap-2 py-2 px-4 rounded-lg"><i class="fa-solid fa-image text-blue-400"></i><span>Advanced AI Specialist</span></div>
+                        <div class="skill-badge flex items-center gap-2 py-2 px-4 rounded-lg"><i class="fa-solid fa-image text-blue-400"></i><span>AI-Powered Editing</span></div>
+                        
+                        
                     </div>
                 </div>
             </div>
@@ -175,7 +180,7 @@
             <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">My Work</h2>
             <div id="filter-buttons" class="flex flex-wrap justify-center gap-3 mb-12">
                 <button class="filter-btn active py-2 px-5 rounded-full text-sm font-semibold" data-filter="all">All</button>
-                <button class="filter-btn py-2 px-5 rounded-full text-sm font-semibold" data-filter="promo">Promotional</button>
+                <button class="filter-btn py-2 px-5 rounded-full text-sm font-semibold" data-filter="promo">Documentary</button>
                 <button class="filter-btn py-2 px-5 rounded-full text-sm font-semibold" data-filter="shorts">Shorts</button>
                 <button class="filter-btn py-2 px-5 rounded-full text-sm font-semibold" data-filter="reels">Reels</button>
             </div>
@@ -204,7 +209,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const ADMIN_PASSWORD = 'password123';
         const initialData = {
-            profilePic: "https://placehold.co/200x200/161b22/c9d1d9?text=S",
+            profilePic: "sah.jpg",
             bannerImages: ["https://placehold.co/1600x900/161b22/30363d?text=Banner+1"],
             name: "Saharsh Sharma",
             tagline: "Video Editor & Creative Storyteller crafting compelling visual narratives.",
@@ -215,15 +220,55 @@
             youtube: "https://www.youtube.com/",
             accentColor: "#4f46e5",
             portfolioItems: [
-                { id: 1, title: "Technothon Trailer", category: "promo", link: "https://drive.google.com/file/d/1sKUqmUAsoKNBfUO8GR1tPSGBLxbENBEQ/view?usp=sharing", thumbnail: "https://placehold.co/600x400/1f2937/ffffff?text=Technothon+Trailer" },
-                { id: 2, title: "Sponsor Promotion Video", category: "promo", link: "https://drive.google.com/file/d/1gFqrVwcjGzPj0oKifHYmO8hxcRTuGnzl/view?usp=sharing", thumbnail: "https://placehold.co/600x400/1f2937/ffffff?text=Sponsor+Promo+1" },
+                { id: 1, title: "How Does Your Phone's Touchscreen Actually Work? 📱🤯 Explained in 3 Minutes!", category: "promo", link: "https://youtube.com/shorts/2k0MNbZIa0w", thumbnail: "https://placehold.co/600x400/1f2937/ffffff?text=1 (Documentary Style)" },
+                { id: 2, title: " 0% TAX on 3 essentials | Save Thousands! 💰|| सरकार का बड़ा ऐलान! अब इन 3 चीजों पर 0% GST ||", category: "promo", link: "https://youtube.com/shorts/wfja7P5UvR8", thumbnail: "https://placehold.co/600x400/1f2937/ffffff?text=2 (Documentary Style)    " },
+
+                { id: 3, title: "The Genius SECRET Inside Every QR Code! 🤫", category: "promo", link: "https://youtube.com/shorts/g5U0u8fLAcY", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text= 3 (Documentary Style)" },
+
+
+                { id: 4, title: "Car & Bike अब हुए सस्ते ! 🤯 New GST Rules 2025 on Car & Bike | Biggest Price Drop!", category: "promo", link: "https://youtube.com/shorts/8z5SXC2Df4Y", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=4 (Documentary Style)" },
+
+
+
+
+
+
+        
+                 { id: 3, title: "Mahabharat Episode 1", category: "promo", link: "https://drive.google.com/file/d/17dItDYdhTGTvWmaUXcc5Xrh7R_EogenG/view?usp=drive_link", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=5 (Documentary Style)" },
+                   
+                 { id: 3, title: "Mahabharat Episode 2", category: "promo", link: "https://drive.google.com/file/d/17dItDYdhTGTvWmaUXcc5Xrh7R_EogenG/view?usp=drive_link", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=6 (Documentary Style)" },
+
+                 { id: 3, title: " 99% Hindus Don't Know This Janmashtami Secret! | Who was Yogamaya?", category: "promo", link: "https://youtube.com/shorts/GTiOgrBu1Aw", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=7 (Documentary Style)" },
+                 
+
+
+
+
+
+                { id: 5, title: "Why Hanuman Ji is Painted Red? 🟥 Unveiling the Mystery!", category: "promo", link: "https://youtube.com/shorts/83CYOuvf57g", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Mythology+Short+1" },
+
+
+                { id: 6, title: "Dev vs Bhagwan: The Real Difference Explained! 🌟 | Hindu Mythology Insights", category: "promo", link: "https://youtube.com/shorts/96dZreW1LIw", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Mythology+Short+2" },
+
+                { id: 4, title: "Samudra Manthan: The Epic Ocean Churning - Gods vs Demons", category: "promo", link: "https://youtube.com/shorts/9j_iEiyMXEw", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Mythology+Short+3" },
+
+               
+
+             
+                
+                { id: 7, title: "Cinematic Reel 1", category: "promo", link: "https://www.instagram.com/reel/DGIkaECSTiO/", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Cinematic+Reel+1" },
+
+                { id: 8, title: "Cinematic Reel 2", category: "promo", link: "https://www.instagram.com/reel/C6Vb48qSAt2/", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Cinematic+Reel+2" },
+                { id: 9, title: "Cinematic Reel 3", category: "promo", link: "https://www.instagram.com/reel/DGF_nvIy9V7/", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Cinematic+Reel+3" },
+
+                 { id: 9, title: "Absolute fire on the dance floor at The Kolkata Festival! 🔥 The energy was electric with insane dance battles and cyphers. So much raw talent in one place. The crowd was hyped and the vibe was just unreal! 💯", category: "promo", link: "https://www.instagram.com/reel/DO-5lPnD20A/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Phonk Fast Beats Overlays" },
+
+
+                
                 { id: 3, title: "Sponsor Promotion Video 2", category: "promo", link: "https://drive.google.com/file/d/1k6z1PHaKGGOPo28Rt7hyzS4rcL6xhdEF/view?usp=sharing", thumbnail: "https://placehold.co/600x400/1f2937/ffffff?text=Sponsor+Promo+2" },
-                { id: 4, title: "Mythology Short 1", category: "shorts", link: "https://youtube.com/shorts/9j_iEiyMXEw", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Mythology+Short+1" },
-                { id: 5, title: "Mythology Short 2", category: "shorts", link: "https://youtube.com/shorts/83CYOuvf57g", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Mythology+Short+2" },
-                { id: 6, title: "Mythology Short 3", category: "shorts", link: "https://youtube.com/shorts/96dZreW1LIw", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Mythology+Short+3" },
-                { id: 7, title: "Cinematic Reel 1", category: "reels", link: "https://www.instagram.com/reel/DGIkaECSTiO/", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Cinematic+Reel+1" },
-                { id: 8, title: "Cinematic Reel 2", category: "reels", link: "https://www.instagram.com/reel/C6Vb48qSAt2/", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Cinematic+Reel+2" },
-                { id: 9, title: "Cinematic Reel 3", category: "reels", link: "https://www.instagram.com/reel/DGF_nvIy9V7/", thumbnail: "https://placehold.co/400x711/1f2937/ffffff?text=Cinematic+Reel+3" },
+                { id: 3, title: "Restaurant-style Chilli Paneer, made right at home! 🌶️🔥 So spicy, saucy, and incredibly tasty.", category: "promo", link: "https://www.instagram.com/reel/DQetLo9k4L9/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==", thumbnail: "https://placehold.co/600x400/1f2937/ffffff?text=Time Laps Cinematic" },
+
+               
             ]
         };
         let appData = {};
